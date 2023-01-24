@@ -1,0 +1,30 @@
+include_statement  =  {  "#" ~ "include" ~ '<' ~ '"' ~ file_name:IDENT ~ '"' ~ '>'  }
+declaration  =  {  variable_declaration  |  function_declaration  }
+variable_declaration  =  {  type_specifier ~ variable_list ~ ";"  }
+function_declaration  =  {  type_specifier ~ ID ~ "(" ~ parameters? ~ ")" ~ compound_statement  }
+parameters  =  {  parameter ~ ("," ~ parameter)*  }
+parameter  =  {  type_specifier ~ variable  }
+type_specifier  =  {  "int"  |  "float"  |  "char"  |  "double"  }
+variable_list  =  {  variable ~ ("," ~ variable)*  }
+variable  =  {  ID  }
+compound_statement  =  {  "{" ~ statement* ~ "}"  }
+statement  =  {  expression_statement  |  compound_statement  |  if_statement  |  while_statement  }
+expression_statement  =  {  expression? ~ ";"  }
+expression  =  {  assignment_expression  }
+assignment_expression =  {  variable ~ "=" ~ assignment_expression  |  conditional_expression  }
+conditional_expression =  {  logical_or_expression  }
+logical_or_expression =  {  logical_and_expression ~ ("||" ~ logical_and_expression)*  }
+logical_and_expression =  {  equality_expression ~ ("&&" ~ equality_expression)*  }
+equality_expression =  {  relational_expression ~ (("=="  |  "!=") ~ relational_expression)*  }
+relational_expression =  {  additive_expression ~ (("<"  |  ">"  |  "<="  |  ">=") ~ additive_expression)*  }
+additive_expression =  {  multiplicative_expression ~ (("+"  |  "-") ~ multiplicative_expression)*  }
+multiplicative_expression =  {  primary_expression ~ (("*"  |  "|"  |  "%") ~ primary_expression)*  }
+primary_expression  =  {  ID  |  constant  |  "(" ~ expression ~ ")"  }
+constant  =  {  INTEGER  |  FLOAT  }
+INTEGER  =  @{  ["0"-"9"]+  }
+FLOAT  =  @{  ["0"-"9"]+ ~ "." ~ ["0"-"9"]+  }
+ID  =  @{  ["a"-"z","A"-"Z","_"] ~ (["a"-"z","A"-"Z","0"-"9","_"])*  }
+
+if_statement  =  {  "if" ~ "(" ~ expression ~ ")" ~ statement ~ ("else" ~ statement)?  }
+while_statement  =  {  "while" ~ "(" ~ expression ~ ")" ~ statement  }
+program  =  {  include_statement* ~ statement*  }

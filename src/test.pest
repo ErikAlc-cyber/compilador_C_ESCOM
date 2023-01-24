@@ -1,0 +1,16 @@
+program = {statement*}
+statement = {expression~";"|include_statement|if_statement|while_statement|for_statement|return_statement}
+expression = {assign_expression}
+assign_expression = {add_sub~(~("="~|~"+="~|~"-=")~add_sub~)?}
+add_sub = {term~(("+"|"-")term)*}
+term = {factor~(("*"|"|"|"%")~factor)*}
+factor = {number|pointer|struct_access|"("~add_sub~")"}
+pointer = {"&"~factor}
+struct_access = {~factor~"."~IDENTIFIER}
+number = @{["0"-"9"]+}
+include_statement = {~"#include"~<'"'>~IDENTIFIER~<'"'>}
+if_statement = {"if"~"("~expression~")"~statement~("else"~statement)?}
+while_statement = {"while"~"("~expression~")"~statement}
+for_statement = {"for"~"("~assign_expression~";"~expression~";"~assign_expression~")"~statement}
+return_statement = {"return"~expression~";"}
+IDENTIFIER = @{["a"-"z"~"A"-"Z"~"_"]~["a"-"z"~"A"-"Z"~"_"~"0"-"9"]*}
